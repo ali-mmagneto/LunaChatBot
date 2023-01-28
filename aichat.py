@@ -27,8 +27,8 @@ arq = None
 async def aichatQuery(query: str, user_id: int):
     query = (
         query
-        if LANGUAGE == "en"
-        else (await arq.translate(query, "en")).result.translatedText
+        if LANGUAGE == "tr"
+        else (await arq.translate(query, "tr")).result.translatedText
     )
     resp = (await arq.aichat(query, user_id)).result
     return (
@@ -46,7 +46,9 @@ async def type_and_send(message):
     query = message.text.strip()
     await message._client.send_chat_action(chat_id, "typing")
     response, _ = await gather(aichatQuery(query, user_id), sleep(2))
-    await message.reply_text(response)
+    await message._client.send_message(
+        chat_id=message.chat.id,
+        text=response)
     await message._client.send_chat_action(chat_id, "cancel")
 
 
