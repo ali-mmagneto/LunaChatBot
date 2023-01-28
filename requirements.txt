@@ -1,4 +1,4 @@
 pyrogram==1.4.16
-python-arq
+git+https://github.com/ali-mmagneto/Python_ARQ
 TgCrypto
 asyncio
