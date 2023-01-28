@@ -30,7 +30,7 @@ async def aichatQuery(query: str, user_id: int):
         if LANGUAGE == "en"
         else (await arq.translate(query, "en")).result.translatedText
     )
-    resp = (await arq.luna(query, user_id)).result
+    resp = (await arq.aichat(query, user_id)).result
     return (
         resp
         if LANGUAGE == "en"
@@ -45,7 +45,7 @@ async def type_and_send(message):
     user_id = message.from_user.id if message.from_user else 0
     query = message.text.strip()
     await message._client.send_chat_action(chat_id, "typing")
-    response, _ = await gather(lunaQuery(query, user_id), sleep(2))
+    response, _ = await gather(aichatQuery(query, user_id), sleep(2))
     await message.reply_text(response)
     await message._client.send_chat_action(chat_id, "cancel")
 
@@ -61,7 +61,7 @@ async def repo(_, message):
 
 @aichat.on_message(filters.command("help") & ~filters.edited)
 async def start(_, message):
-    await luna.send_chat_action(message.chat.id, "typing")
+    await aichat.send_chat_action(message.chat.id, "typing")
     await sleep(2)
     await message.reply_text("/repo - Get Repo Link")
 
@@ -82,7 +82,7 @@ async def chat(_, message):
             return
     else:
         match = re.search(
-            "[.|\n]{0,}luna[.|\n]{0,}",
+            "[.|\n]{0,}aichat[.|\n]{0,}",
             message.text.strip(),
             flags=re.IGNORECASE,
         )
