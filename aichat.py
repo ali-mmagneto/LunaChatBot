@@ -13,7 +13,7 @@ if is_config:
 else:
     from sample_config import *
 
-luna = Client(
+aichat = Client(
     ":memory:",
     bot_token=bot_token,
     api_id=6,
@@ -24,7 +24,7 @@ bot_id = int(bot_token.split(":")[0])
 arq = None
 
 
-async def lunaQuery(query: str, user_id: int):
+async def aichatQuery(query: str, user_id: int):
     query = (
         query
         if LANGUAGE == "en"
@@ -50,23 +50,23 @@ async def type_and_send(message):
     await message._client.send_chat_action(chat_id, "cancel")
 
 
-@luna.on_message(filters.command("repo") & ~filters.edited)
+@aichat.on_message(filters.command("repo") & ~filters.edited)
 async def repo(_, message):
     await message.reply_text(
-        "[GitHub](https://github.com/thehamkercat/LunaChatBot)"
-        + " | [Group](t.me/PatheticProgrammers)",
+        "[Beni Oluşturan](https://t.me/mmagneto)"
+        + " | [Kanalım](t.me/mmagneto3)",
         disable_web_page_preview=True,
     )
 
 
-@luna.on_message(filters.command("help") & ~filters.edited)
+@aichat.on_message(filters.command("help") & ~filters.edited)
 async def start(_, message):
     await luna.send_chat_action(message.chat.id, "typing")
     await sleep(2)
     await message.reply_text("/repo - Get Repo Link")
 
 
-@luna.on_message(
+@aichat.on_message(
     ~filters.private
     & filters.text
     & ~filters.command("help")
@@ -91,7 +91,7 @@ async def chat(_, message):
     await type_and_send(message)
 
 
-@luna.on_message(
+@aichat.on_message(
     filters.private & ~filters.command("help") & ~filters.edited
 )
 async def chatpm(_, message):
@@ -105,11 +105,11 @@ async def main():
     session = ClientSession()
     arq = ARQ(ARQ_API_BASE_URL, ARQ_API_KEY, session)
 
-    await luna.start()
+    await aichat.start()
     print(
         """
 -----------------
-| Luna Started! |
+| aichat Bașlatıldı! |
 -----------------
 """
     )
