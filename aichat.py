@@ -13,7 +13,7 @@ if is_config:
 else:
     from sample_config import *
 
-aichat = Client(
+luna = Client(
     ":memory:",
     bot_token=bot_token,
     api_id=6,
@@ -24,13 +24,13 @@ bot_id = int(bot_token.split(":")[0])
 arq = None
 
 
-async def aichatQuery(query: str, user_id: int):
+async def lunaQuery(query: str, user_id: int):
     query = (
         query
         if LANGUAGE == "en"
         else (await arq.translate(query, "en")).result.translatedText
     )
-    resp = (await arq.aichat(query, user_id)).result
+    resp = (await arq.luna(query, user_id)).result
     return (
         resp
         if LANGUAGE == "en"
@@ -45,14 +45,14 @@ async def type_and_send(message):
     user_id = message.from_user.id if message.from_user else 0
     query = message.text.strip()
     await message._client.send_chat_action(chat_id, "typing")
-    response = await gather(aichatQuery(query, user_id), sleep(2))
+    response = await gather(lunaQuery(query, user_id), sleep(2))
     await message._client.send_message(
         chat_id=message.chat.id,
         text=response)
     await message._client.send_chat_action(chat_id, "cancel")
 
 
-@aichat.on_message(filters.command("repo") & ~filters.edited)
+@luna.on_message(filters.command("repo") & ~filters.edited)
 async def repo(_, message):
     await message.reply_text(
         "[Beni Oluşturan](https://t.me/mmagneto)"
@@ -61,14 +61,14 @@ async def repo(_, message):
     )
 
 
-@aichat.on_message(filters.command("help") & ~filters.edited)
+@luna.on_message(filters.command("help") & ~filters.edited)
 async def start(_, message):
-    await aichat.send_chat_action(message.chat.id, "typing")
+    await luna.send_chat_action(message.chat.id, "typing")
     await sleep(2)
     await message.reply_text("/repo - Get Repo Link")
 
 
-@aichat.on_message(
+@luna.on_message(
     ~filters.private
     & filters.text
     & ~filters.command("help")
@@ -84,7 +84,7 @@ async def chat(_, message):
             return
     else:
         match = re.search(
-            "[.|\n]{0,}aichat[.|\n]{0,}",
+            "[.|\n]{0,}luna[.|\n]{0,}",
             message.text.strip(),
             flags=re.IGNORECASE,
         )
@@ -93,7 +93,7 @@ async def chat(_, message):
     await type_and_send(message)
 
 
-@aichat.on_message(
+@luna.on_message(
     filters.private & ~filters.command("help") & ~filters.edited
 )
 async def chatpm(_, message):
@@ -107,7 +107,7 @@ async def main():
     session = ClientSession()
     arq = ARQ(ARQ_API_BASE_URL, ARQ_API_KEY, session)
 
-    await aichat.start()
+    await luna.start()
     print(
         """
 -----------------
