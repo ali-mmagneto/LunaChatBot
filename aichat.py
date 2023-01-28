@@ -27,8 +27,8 @@ arq = None
 async def aichatQuery(query: str, user_id: int):
     query = (
         query
-        if LANGUAGE == "tr"
-        else (await arq.translate(query, "tr")).result.translatedText
+        if LANGUAGE == "en"
+        else (await arq.translate(query, "en")).result.translatedText
     )
     resp = (await arq.aichat(query, user_id)).result
     return (
